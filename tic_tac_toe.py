@@ -9,7 +9,7 @@ root.configure(bg='pink')
 
 frame1 = tk.Frame(root)
 frame1.pack()
-titleLabel = tk.Label(frame1, text = "Tic Tac Toe", font=("Montserrat", 25), bg="pink", fg="green")
+titleLabel = tk.Label(frame1, text = "Tic Tac Toe", font=("Montserrat", 25), bg="pink", fg="green",width=20)
 titleLabel.grid(row=0, column=0)
 
 frame2 = tk.Frame(root)
@@ -50,6 +50,8 @@ def checkForDraw():
     return True
 
 
+
+
 def play(event):
     global turn
     button = event.widget
@@ -68,19 +70,19 @@ def play(event):
             button["text"] = 'x'
             board[clicked] = turn
             if checkForWin(turn):
-                winningLabel = tk.Label(frame1, text=f"{turn} wins the game!",font=('Montserrat',25),bg='pink',fg='green')
+                winningLabel = tk.Label(frame1, text=f"{turn} wins the game!",font=('Montserrat',25),bg='pink',fg='green', width=20)
                 winningLabel.grid(row=0,column=0,columnspan=3)
             turn = 'o'
         else:
             button["text"] = 'o'
             board[clicked] = turn
             if checkForWin(turn):
-                winningLabel = tk.Label(frame1, text=f"{turn} wins the game!",font=('Montserrat',25),bg='pink',fg='green')
+                winningLabel = tk.Label(frame1, text=f"{turn} wins the game!",font=('Montserrat',25),bg='pink',fg='green', width=20)
                 winningLabel.grid(row=0, column=0, columnspan=3)
             turn = 'x'
 
         if checkForDraw():
-            drawLabel = tk.Label(frame1, text="Game Draw!", font=('Montserrat', 25), bg='pink',fg='green')
+            drawLabel = tk.Label(frame1, text="Game Draw!", font=('Montserrat', 25), bg='pink',fg='green', width=20)
             drawLabel.grid(row=0, column=0, columnspan=3)
 
 
@@ -126,9 +128,20 @@ button9 = tk.Button(frame2, text = " ", width = 4, height = 2,font = ("Montserra
 button9.grid(row = 3, column = 2)
 button9.bind("<Button-1>", play)
 
-restartButton = tk.Button(frame2, text="Restart Game", width=12, height=1, font=("Montserrat",20),bg="green", relief=tk.RAISED, borderwidth=5)
-restartButton.grid(row = 4, column = 0,columnspan = 3)
 
+
+buttons = [button1,button2,button3,button4,button5,button6,button7,button8,button9]
+
+def restartGame():
+    for button in buttons:
+        button['text'] = " "
+    for i in board.keys():
+        board[i] = " "
+    titleLabel = tk.Label(frame1, text="Tic Tac Toe", font=("Montserrat", 25), bg="pink", fg="green", width=20)
+    titleLabel.grid(row=0, column=0)
+
+restartButton = tk.Button(frame2, text="Restart Game", width=12, height=1, font=("Montserrat",20),bg="green", relief=tk.RAISED, borderwidth=5,command=restartGame)
+restartButton.grid(row = 4, column = 0,columnspan = 3)
 
 
 root.mainloop()
