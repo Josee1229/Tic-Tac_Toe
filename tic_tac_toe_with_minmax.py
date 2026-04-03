@@ -1,6 +1,7 @@
 # Building Tic Tac Toe game using Python and Tkinter
 
 import tkinter as tk
+from tkinter.constants import LEFT
 
 root = tk.Tk()
 root.geometry("500x500")
@@ -23,6 +24,10 @@ board = {1:" ", 2:" ", 3:" ",
 turn = 'x'
 game_end = False
 
+def updateBoard():
+    for key in board.keys():
+        buttons[key-1]['text'] = board[key]
+
 def checkForWin(player):
     if (board[1] == board[2] and board[2] == board[3] and board[3] == player):
         return True
@@ -43,15 +48,11 @@ def checkForWin(player):
     else:
         return False;
 
-
 def checkForDraw():
     for i in board.keys():
         if board[i] == ' ':
             return False
     return True
-
-
-
 
 def play(event):
     global turn,game_end
@@ -64,17 +65,23 @@ def play(event):
     else:
         clicked = int(buttonIdentifier)
 
-
-
     if button["text"] == " " and game_end==False:
         if turn == 'x':
-            button["text"] = 'x'
             board[clicked] = turn
             if checkForWin(turn):
                 winningLabel = tk.Label(frame1, text=f"{turn} wins the game!",font=('Montserrat',25),bg='pink',fg='#ff3d3e', width=20)
                 winningLabel.grid(row=0,column=0,columnspan=3)
                 game_end = True
             turn = 'o'
+            playComputer()
+            if checkForWin(turn):
+                winningLabel = tk.Label(frame1, text=f"{turn} wins the game!",font=('Montserrat',25),bg='pink',fg='#ff3d3e', width=20)
+                winningLabel.grid(row=0,column=0,columnspan=3)
+                game_end = True
+            turn = 'x'
+            updateBoard()
+
+
         else:
             button["text"] = 'o'
             board[clicked] = turn
@@ -87,6 +94,57 @@ def play(event):
         if checkForDraw():
             drawLabel = tk.Label(frame1, text="Game Draw!", font=('Montserrat', 25), bg='pink',fg='#ff3d3e', width=20)
             drawLabel.grid(row=0, column=0)
+
+        print(board)
+
+def minimax(board, isMaximizing):
+
+    if checkForWin('o'):
+        return 1
+
+    if checkForWin('x'):
+        return -1
+
+    if checkForDraw():
+        return 0
+
+    if isMaximizing:
+        bestScore = -100
+
+        for key in board.keys():
+            if board[key] == " ":
+                board[key] = "o"
+                score = minimax(board, False)
+                board[key] = " "
+                if score > bestScore:
+                    bestScore = score
+        return bestScore
+    else:
+        bestScore = 100
+
+        for key in board.keys():
+            if board[key] == " ":
+                board[key] = "x"
+                score = minimax(board, True)
+                board[key] = " "
+                if score < bestScore:
+                    bestScore = score
+        return bestScore
+
+def playComputer():
+    bestScore = -100
+    bestMove = 0
+
+    for key in board.keys():
+        if board[key] == " ":
+            board[key] = "o"
+            score = minimax(board, False)
+            board[key] = " "
+            if score>bestScore:
+                bestScore = score
+                bestMove = key
+
+    board[bestMove] = 'o'
 
 
 
